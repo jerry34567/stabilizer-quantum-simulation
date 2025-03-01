@@ -140,6 +140,36 @@ void gate_t(MTBDD *p_t, uint32_t xt);
 TASK_DECL_2(MTBDD, _gate_h, MTBDD, uint32_t);
 void gate_h(MTBDD *p_t, uint32_t xt);
 
+/**
+ * Function implementing measurement one of a qubit.
+ * 
+ * @param p_t pointer to an MTBDD
+ * 
+ * @param xt target qubit index
+ */
+TASK_DECL_2(MTBDD, _gate_measure_one, MTBDD, uint32_t);
+void gate_measure_one(MTBDD *p_t, uint32_t xt);
+
+/**
+ * Function implementing measurement zero of a qubit.
+ * 
+ * @param p_t pointer to an MTBDD
+ * 
+ * @param xt target qubit index
+ */
+TASK_DECL_2(MTBDD, _gate_measure_zero, MTBDD, uint32_t);
+void gate_measure_zero(MTBDD *p_t, uint32_t xt);
+
+/**
+ * Function implementing quantum T dagger gate for a given MTBDD.
+ * 
+ * @param p_t pointer to an MTBDD
+ * 
+ * @param xt target qubit index
+ */
+TASK_DECL_2(MTBDD, _gate_t_dagger, MTBDD, uint32_t);
+void gate_t_dagger(MTBDD *p_t, uint32_t xt);
+
 // /**
 //  * Function implementing quantum Rx(π/2) gate for a given MTBDD.
 //  * 

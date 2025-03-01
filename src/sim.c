@@ -415,20 +415,6 @@ bool sim_file(FILE *in, MTBDD *circ, int *n_qubits, int **bits_to_measure, bool 
             else {
                 error_exit("Invalid command '%s'.\n", cmd);
             }
-            // temp++;
-            // printf("i=%d\n", temp);
-            // size_t size = mtbdd_nodecount(*circ);
-            // printf("MTBDD 節點數量: %zu\n", size);
-            // size_t leaves = mtbdd_leafcount(*circ);
-            // printf("MTBDD 葉子節點數量: %zu\n", leaves);
-            // printf("當前記憶體使用量=%ldkB\n", get_current_mem());
-            // printf("峰值記憶體使用量=%ldkB\n", get_peak_mem());
-            
-
-            // 每100個門操作檢查一次記憶體使用情況
-            // if (++gate_count % 100 == 0) {
-            //     check_memory_usage();
-            // }
         }
         else {
             error_exit("Circuit not initialized.\n");

@@ -641,7 +641,7 @@ TASK_IMPL_2(MTBDD, mtbdd_div_2, MTBDD, t, size_t, x)
     // Partial function check
     if (t == mtbdd_false) return mtbdd_false;
 
-    // Compute t * √2 if mtbdd is a leaf
+    // Compute t * 2 if mtbdd is a leaf
     if (mtbdd_isleaf(t)) {
         cnum *ldata = (cnum*) mtbdd_getvalue(t);
 

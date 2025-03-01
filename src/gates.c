@@ -541,6 +541,112 @@ TASK_IMPL_2(MTBDD, _gate_h, MTBDD, dd, uint32_t, xt)
     return mtbdd_invalid; // Recurse deeper
 }
 
+TASK_IMPL_2(MTBDD, _gate_t_dagger, MTBDD, dd, uint32_t, xt)
+{
+    uint32_t var = mtbdd_getvar(dd);
+
+    if (var == 2*xt) {
+        MTBDD dd_high = mtbdd_gethigh(dd);
+        MTBDD dd_low = mtbdd_getlow(dd);
+
+        MTBDD high_high;
+        MTBDD high_low;
+
+        if (dd_high == mtbdd_false) {
+            high_high = mtbdd_false;
+            high_low = mtbdd_false;
+        }
+        else if (mtbdd_getvar(dd_high) == 2*xt+1) {
+            high_high = mtbdd_gethigh(dd_high);
+            high_low = mtbdd_getlow(dd_high);
+        }
+        else {
+            high_high = dd_high;
+            high_low = dd_high;
+        }
+
+        MTBDD new_high_low = my_mtbdd_div_root2(my_mtbdd_plus(high_high, high_low));
+        MTBDD new_high_high = my_mtbdd_div_root2(my_mtbdd_minus(high_high, high_low));
+        mtbdd_protect(&new_high_low);
+        mtbdd_protect(&new_high_high);
+
+        MTBDD result = mtbdd_makenode(2*xt, dd_low, mtbdd_makenode(2*xt+1, new_high_low, new_high_high));
+
+        mtbdd_unprotect(&new_high_low);
+        mtbdd_unprotect(&new_high_high);
+        return result;
+    }
+
+    return mtbdd_invalid; // Recurse deeper
+}
+
+TASK_IMPL_2(MTBDD, _gate_measure_one, MTBDD, dd, uint32_t, xt)
+{
+    uint32_t var = mtbdd_getvar(dd);
+    
+    if (var == 2*xt) {
+        MTBDD dd_high = mtbdd_gethigh(dd);
+        MTBDD dd_low = mtbdd_getlow(dd);
+        MTBDD low_low;
+        MTBDD low_high;
+
+        if (dd_low == mtbdd_false) {
+            low_low = mtbdd_false;
+            low_high = mtbdd_false;
+        }
+        else if (mtbdd_getvar(dd_low) == 2*xt+1) {
+            low_low = mtbdd_getlow(dd_low);
+            low_high = mtbdd_gethigh(dd_low);
+        }
+        else {
+            low_low = dd_low;
+            low_high = dd_low;
+        }
+
+
+        MTBDD low = mtbdd_makenode(2*xt+1, my_mtbdd_div_2(my_mtbdd_minus(low_low, low_high)), my_mtbdd_div_2(my_mtbdd_minus(low_high, low_low)));
+        mtbdd_protect(&low);
+
+        MTBDD result = mtbdd_makenode(2*xt, low, mtbdd_false);
+        mtbdd_unprotect(&low);
+
+        return result;
+    }
+
+    return mtbdd_invalid; // Recurse deeper
+}
+
+TASK_IMPL_2(MTBDD, _gate_measure_zero, MTBDD, dd, uint32_t, xt)
+{
+    uint32_t var = mtbdd_getvar(dd);
+    
+    if (var == 2*xt) {
+        MTBDD dd_high = mtbdd_gethigh(dd);
+        MTBDD dd_low = mtbdd_getlow(dd);
+        MTBDD low_low;
+        MTBDD low_high;
+
+        if (dd_low == mtbdd_false) {
+            low_low = mtbdd_false;
+            low_high = mtbdd_false;
+        }
+        else if (mtbdd_getvar(dd_low) == 2*xt+1) {
+            low_low = mtbdd_getlow(dd_low);
+            low_high = mtbdd_gethigh(dd_low);
+        }
+        else {
+            low_low = dd_low;
+            low_high = dd_low;
+        }
+
+        MTBDD result = mtbdd_makenode(2*xt, my_mtbdd_div_2(my_mtbdd_plus(low_low, low_high)), mtbdd_false);
+
+        return result;
+    }
+
+    return mtbdd_invalid; // Recurse deeper
+}
+
 TASK_IMPL_4(MTBDD, mtbdd_cnot_apply, MTBDD, dd, mtbdd_cnot_apply_op, op, uint32_t, xt, uint32_t, xc)
 {
     sylvan_gc_test();
@@ -1552,6 +1658,21 @@ void gate_h(MTBDD *p_t, uint32_t xt)
     // mtbdd_unprotect(&temp1);
     // mtbdd_unprotect(&temp2);
     // mtbdd_unprotect(&res);
+}
+
+void gate_t_dagger(MTBDD *p_t, uint32_t xt)
+{
+    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_gate_t_dagger), xt);
+}
+
+void gate_measure_one(MTBDD *p_t, uint32_t xt)
+{
+    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_gate_measure_one), xt);
+}
+
+void gate_measure_zero(MTBDD *p_t, uint32_t xt)
+{
+    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_gate_measure_zero), xt);
 }
 
 // void gate_rx_pihalf(MTBDD *p_t, uint32_t xt)
