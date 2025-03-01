@@ -170,6 +170,18 @@ void gate_measure_zero(MTBDD *p_t, uint32_t xt);
 TASK_DECL_2(MTBDD, _gate_t_dagger, MTBDD, uint32_t);
 void gate_t_dagger(MTBDD *p_t, uint32_t xt);
 
+/**
+ * Function implementing branch conditionally on the measurement value of a qubit.
+ * 
+ * @param S_0 MTBDD for the case where the qubit is measured as 0
+ * 
+ * @param S_1 MTBDD for the case where the qubit is measured as 1
+ * 
+ * @param xt target qubit index
+ * 
+ */
+void branch_condition(MTBDD *p_t, MTBDD *S_0, MTBDD *S_1, uint32_t xt);
+
 // /**
 //  * Function implementing quantum Rx(π/2) gate for a given MTBDD.
 //  * 

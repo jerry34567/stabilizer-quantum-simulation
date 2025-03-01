@@ -1675,6 +1675,13 @@ void gate_measure_zero(MTBDD *p_t, uint32_t xt)
     *p_t = my_mtbdd_apply_gate(*p_t, TASK(_gate_measure_zero), xt);
 }
 
+void branch_condition(MTBDD *p_t, MTBDD *S_0, MTBDD *S_1, uint32_t xt)
+{
+    gate_measure_one(S_1, xt);
+    gate_measure_zero(S_0, xt);
+    *p_t = my_mtbdd_plus(*S_0, *S_1);
+}
+
 // void gate_rx_pihalf(MTBDD *p_t, uint32_t xt)
 // {
 //     *p_t = my_mtbdd_apply_gate(*p_t, TASK(_gate_rx_pihalf), xt);
