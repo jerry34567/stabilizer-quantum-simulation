@@ -182,6 +182,18 @@ void gate_t_dagger(MTBDD *p_t, uint32_t xt);
  */
 void branch_condition(MTBDD *p_t, MTBDD *S_0, MTBDD *S_1, uint32_t xt);
 
+/**
+ * Function implementing precondition initialization for a given MTBDD and target qubit index.
+ * 
+ * 
+ * @param p_t pointer to an MTBDD
+ * 
+ * @param xt target qubit index
+ * 
+ */
+TASK_DECL_2(MTBDD, _precondition_init_qubit, MTBDD, uint32_t);
+void precondition_init_qubit(MTBDD *p_t, uint32_t xt);
+
 // /**
 //  * Function implementing quantum Rx(π/2) gate for a given MTBDD.
 //  * 

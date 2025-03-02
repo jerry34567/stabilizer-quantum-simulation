@@ -647,6 +647,41 @@ TASK_IMPL_2(MTBDD, _gate_measure_zero, MTBDD, dd, uint32_t, xt)
     return mtbdd_invalid; // Recurse deeper
 }
 
+TASK_IMPL_2(MTBDD, _precondition_init_qubit, MTBDD, dd, uint32_t, xt)
+{
+    uint32_t var = mtbdd_getvar(dd);
+
+    if (var == 2*xt) {
+        MTBDD dd_low = mtbdd_getlow(dd);
+        MTBDD low_low;
+        MTBDD low_high;
+
+        if (dd_low == mtbdd_false) {
+            low_low = mtbdd_false;
+            low_high = mtbdd_false;
+        }
+        else if (mtbdd_getvar(dd_low) == 2*xt+1) {
+            low_low = mtbdd_getlow(dd_low);
+            low_high = mtbdd_gethigh(dd_low);
+        }
+        else {
+            low_low = dd_low;
+            low_high = dd_low;
+        }
+
+        MTBDD low = mtbdd_makenode(2*xt+1, my_mtbdd_plus(low_low, low_high), mtbdd_false);
+        mtbdd_protect(&low);
+
+        MTBDD result = mtbdd_makenode(2*xt, low, mtbdd_false);
+        mtbdd_unprotect(&low);
+
+        return result;
+    }
+
+    return mtbdd_invalid; // Recurse deeper
+}
+
+
 TASK_IMPL_4(MTBDD, mtbdd_cnot_apply, MTBDD, dd, mtbdd_cnot_apply_op, op, uint32_t, xt, uint32_t, xc)
 {
     sylvan_gc_test();
@@ -1680,6 +1715,11 @@ void branch_condition(MTBDD *p_t, MTBDD *S_0, MTBDD *S_1, uint32_t xt)
     gate_measure_one(S_1, xt);
     gate_measure_zero(S_0, xt);
     *p_t = my_mtbdd_plus(*S_0, *S_1);
+}
+
+void precondition_init_qubit(MTBDD *p_t, uint32_t xt)
+{
+    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_precondition_init_qubit), xt);
 }
 
 // void gate_rx_pihalf(MTBDD *p_t, uint32_t xt)
