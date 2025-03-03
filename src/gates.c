@@ -647,7 +647,7 @@ TASK_IMPL_2(MTBDD, _gate_measure_zero, MTBDD, dd, uint32_t, xt)
     return mtbdd_invalid; // Recurse deeper
 }
 
-TASK_IMPL_2(MTBDD, _precondition_init_qubit, MTBDD, dd, uint32_t, xt)
+TASK_IMPL_2(MTBDD, _initialize_qubit, MTBDD, dd, uint32_t, xt)
 {
     uint32_t var = mtbdd_getvar(dd);
 
@@ -1717,9 +1717,9 @@ void branch_condition(MTBDD *p_t, MTBDD *S_0, MTBDD *S_1, uint32_t xt)
     *p_t = my_mtbdd_plus(*S_0, *S_1);
 }
 
-void precondition_init_qubit(MTBDD *p_t, uint32_t xt)
+void initialize_qubit(MTBDD *p_t, uint32_t xt)
 {
-    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_precondition_init_qubit), xt);
+    *p_t = my_mtbdd_apply_gate(*p_t, TASK(_initialize_qubit), xt);
 }
 
 // void gate_rx_pihalf(MTBDD *p_t, uint32_t xt)

@@ -214,10 +214,10 @@ void circuit_init(MTBDD *c, const uint32_t n)
 //     mtbdd_traverse_nodes(*c);
 // }
 
-void precondition_init(MTBDD *c, const uint32_t n)
+void initialize_all_qubits(MTBDD *c, const uint32_t n)
 {
     for (uint32_t i = 0; i < n; i++) {
-        precondition_init_qubit(c, i);
+        initialize_qubit(c, i);
     }
 }
 
